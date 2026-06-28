@@ -25,8 +25,10 @@ This is the working artifact behind the post [Standardize the Gates, Not the Ste
 ## What this is not
 
 - **Not a substitute for an auditor.** The mappings are a starting point. Your auditor decides what evidence satisfies which control in your context.
-- **Not a complete control library.** SOC 2, ISO 27001, and PCI DSS each have controls this catalog doesn't touch (physical access, vendor management, business continuity). This catalog covers the controls that the SDLC produces evidence for.
+- **Not a complete control library.** SOC 2, ISO 27001, PCI DSS, and HIPAA each have controls this catalog doesn't touch (physical access, vendor management, business continuity, incident response process, key management, privacy regulatory). This catalog covers the controls that the SDLC produces evidence for.
 - **Not an opinion on which framework you should pursue.** The catalog works for whichever you're already on the hook for.
+
+For the full statement of what's in scope, what's out, and the principle behind the boundary, see [`docs/scope.md`](docs/scope.md).
 
 ## AI-DLC
 
