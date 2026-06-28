@@ -1,0 +1,101 @@
+# Example GitHub Actions workflow that emits gate evidence as a byproduct
+# of the CI run. Drop this into .github/workflows/ in your repo, adapt the
+# placeholders, and the resulting workflow run IS the evidence for the
+# tests-passed, policy-passed, and (with the deploy job) deploy-authorized
+# and deploy-logged gates.
+
+name: build and ship with gate evidence
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  id-token: write       # for OIDC-based deploy + signing
+  packages: write       # for pushing images
+  attestations: write   # for SLSA attestations
+
+jobs:
+
+  # ---- tests-passed --------------------------------------------------------
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npm test -- --reporter=junit --reporter-options output=test-results.xml
+      - name: upload test results (evidence artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results.xml
+          retention-days: 90
+
+  # ---- policy-passed -------------------------------------------------------
+  policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: install conftest
+        run: |
+          curl -sL https://github.com/open-policy-agent/conftest/releases/latest/download/conftest_linux_amd64.tar.gz | tar xz
+          sudo mv conftest /usr/local/bin/
+      - name: run policy gate
+        run: conftest test --policy ./policies ./k8s/
+      - name: scan dependencies (trivy)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          format: sarif
+          output: trivy-results.sarif
+          severity: CRITICAL,HIGH
+          exit-code: "1"
+      - name: upload policy results (evidence artifact)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: policy-results
+          path: trivy-results.sarif
+          retention-days: 90
+
+  # ---- deploy-authorized + deploy-logged -----------------------------------
+  ship:
+    needs: [tests, policy]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: production               # requires approver per branch-protection
+    steps:
+      - uses: actions/checkout@v4
+      - name: build image
+        id: build
+        run: |
+          IMAGE=ghcr.io/${{ github.repository }}:${{ github.sha }}
+          docker build -t "$IMAGE" .
+          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
+      - name: sign image with cosign (keyless via OIDC)
+        uses: sigstore/cosign-installer@v3
+      - run: cosign sign --yes ${{ steps.build.outputs.image }}
+      - name: attest provenance (SLSA)
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ steps.build.outputs.image }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
+      - name: append to deploy log
+        run: |
+          jq -n \
+            --arg commit  "${{ github.sha }}" \
+            --arg image   "${{ steps.build.outputs.image }}" \
+            --arg actor   "${{ github.actor }}" \
+            --arg time    "$(date -u +%FT%TZ)" \
+            '{commit:$commit, image:$image, deployer:$actor, deployed_at:$time}' \
+            >> deploy-log.ndjson
+          # In real use, ship this to an append-only audit store
+          # (S3 with Object Lock, immudb, an OSCAL evidence repo, etc.)

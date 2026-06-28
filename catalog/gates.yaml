@@ -1,0 +1,255 @@
+# sdlc-control-gates: gate catalog
+#
+# Each gate is a control point in a software lifecycle that produces evidence
+# the auditor can read after the fact. The gate set is the contract: every
+# team hits the same gates and produces the same evidence shape. How they
+# move between gates is theirs.
+#
+# Twelve gates: three PDLC, five SDLC, four AI-DLC.
+
+gates:
+
+  # ------- PDLC -------------------------------------------------------------
+
+  - id: build-decision-recorded
+    name: Build decision recorded
+    lifecycle: PDLC
+    description: |
+      A recorded decision to build (or not build) something, before significant
+      engineering effort begins. The decision names what is being built, why,
+      and who decided. The auditor sees that someone authorized the work.
+    evidence:
+      - Ticket, RFC, or design doc with an explicit go/no-go and approver name
+      - Linked back to the change set or PR that implements it
+    tooling:
+      - Linear / Jira ticket with a "build approved" state and approver field
+      - GitHub Discussions or RFC repo with a recorded decision
+      - Notion / Confluence design doc with a status field and named approver
+    fail_mode: |
+      Engineering work starts before anyone has explicitly approved the build.
+      The auditor cannot find when the decision was made or who made it.
+
+  - id: risk-review-attached
+    name: Risk review attached when warranted
+    lifecycle: PDLC
+    description: |
+      For work that warrants it (touches sensitive data, changes auth, adds
+      AI behavior, expands a trust boundary), a security and/or privacy review
+      is recorded against the build decision before implementation begins.
+      The review names the risk surfaces and the mitigations agreed.
+    evidence:
+      - Security review record linked to the build decision
+      - Threat model or risk write-up referenced from the ticket
+      - Privacy impact assessment when personal data is in scope
+    tooling:
+      - GitHub issue template that asks "does this need a security review?"
+      - Threat model in the same RFC repo, linked from the build decision
+      - DPIA template for privacy-impacting work
+    fail_mode: |
+      Sensitive work ships without a risk review. The auditor cannot find
+      who looked at the security or privacy implications.
+
+  - id: post-launch-feedback
+    name: Post-launch feedback loop
+    lifecycle: PDLC
+    description: |
+      A recorded process for learning whether what shipped solved the problem
+      and what to change. The feedback closes the PDLC loop and feeds the
+      next build decision.
+    evidence:
+      - Post-launch review record with a date and conclusions
+      - Metrics dashboard linked from the launch
+      - Customer feedback channel and triage record
+    tooling:
+      - Linear / Jira post-mortem template
+      - Product analytics dashboard with launch-tagged metrics
+      - Customer support tagging that maps issues to the launch
+    fail_mode: |
+      The product team has no record of whether the change worked. The next
+      build decision is made without learning from the last one.
+
+  # ------- SDLC -------------------------------------------------------------
+
+  - id: change-reviewed
+    name: Change reviewed
+    lifecycle: SDLC
+    description: |
+      Every code or config change is reviewed and approved by someone other
+      than the author before it is merged or applied. The review IS the
+      authorization; the evidence is the approval record.
+    evidence:
+      - Signed PR / MR approval record from a non-author
+      - Required-reviewer config that blocks merge without approval
+      - Audit trail of who approved and when
+    tooling:
+      - GitHub branch protection (require N approvals from CODEOWNERS)
+      - GitLab merge request approval rules
+      - Gerrit Code-Review +2 from a reviewer other than the author
+      - Bitbucket required reviewers
+    fail_mode: |
+      Author merges their own change with no second pair of eyes. The
+      auditor sees a change with no separate approver.
+
+  - id: tests-passed
+    name: Tests passed
+    lifecycle: SDLC
+    description: |
+      Automated tests run and pass before the change is allowed to deploy.
+      The evidence is the CI run record. The gate emits pass / fail, not
+      a judgment of test quality.
+    evidence:
+      - Green CI run linked to the change
+      - Test result artifact (JUnit XML, coverage report) attached to the run
+      - Required-status-check config that blocks merge on red
+    tooling:
+      - GitHub Actions / GitLab CI / Buildkite / Jenkins / CircleCI
+      - Required status checks on the protected branch
+      - Test result aggregator (Codecov, Coveralls)
+    fail_mode: |
+      Change merges with red or missing tests. The auditor sees a deploy
+      with no corresponding test run.
+
+  - id: policy-passed
+    name: Policy passed
+    lifecycle: SDLC
+    description: |
+      Policy-as-code checks run at the pipeline gate and emit a pass / fail
+      that blocks the change if it fails. Policies typically cover infrastructure
+      configuration, container images, Kubernetes manifests, dependency
+      vulnerabilities, secret detection, and license compliance.
+    evidence:
+      - Policy run record (Conftest / OPA / Checkov / Trivy output)
+      - Required-status-check that blocks merge on policy failure
+      - Exception record when a policy is deliberately bypassed
+    tooling:
+      - Conftest (OPA) at the policy gate
+      - Checkov for IaC scanning
+      - Trivy for container / dependency scanning
+      - Gitleaks / TruffleHog for secret scanning
+      - OPA Gatekeeper or Kyverno as an admission controller
+    fail_mode: |
+      Insecure configuration or unscanned dependencies reach production.
+      The auditor cannot find evidence the policy ran on this change.
+
+  - id: deploy-authorized
+    name: Deploy authorized
+    lifecycle: SDLC
+    description: |
+      Each deploy to production is authorized by a person or an automated
+      policy with a named accountable approver. The authorization is signed
+      (cryptographically or by access control) so it cannot be forged after
+      the fact.
+    evidence:
+      - Signed deploy record (Sigstore Cosign, GPG signature, Rekor entry)
+      - Deploy approval in the CD tool with an approver identity
+      - Provenance attestation (SLSA, in-toto) linking artifact to source
+    tooling:
+      - Sigstore Cosign for image and provenance signing
+      - Argo CD / Flux with approval workflows
+      - GitHub Actions environments with required reviewers
+      - SLSA / in-toto attestations
+    fail_mode: |
+      Production deploys can be triggered without an authorization record.
+      The auditor cannot establish who approved a given release.
+
+  - id: deploy-logged
+    name: Deploy logged
+    lifecycle: SDLC
+    description: |
+      Every production deploy creates a durable record of what shipped, when,
+      and from which source revision. The log is queryable and tamper-evident.
+    evidence:
+      - Append-only deploy log with timestamp, artifact hash, source commit
+      - SBOM attached to each release
+      - Release notes generated from the source revision range
+    tooling:
+      - Deploy log in a separate audit system (not the same as the CD tool)
+      - SBOM via Syft / SPDX / CycloneDX
+      - GitHub Releases / Sentry release tracking
+    fail_mode: |
+      Releases happen with no durable record of what shipped. Incident
+      response cannot answer "what changed before this broke?"
+
+  # ------- AI-DLC -----------------------------------------------------------
+  # AI-DLC inherits all SDLC gates. The four gates below are the genuinely
+  # new ones the deterministic world never required. See docs/ai-dlc-extension.md
+  # for the framework-mapping limits.
+
+  - id: ai-eval-cleared
+    name: AI evaluation cleared against threshold
+    lifecycle: AI-DLC
+    description: |
+      Before an agent or model release goes to production, it is evaluated
+      against a held-out set with a published release threshold. The result
+      is a pass / fail against the threshold, recorded with the eval set
+      version and the threshold value.
+    evidence:
+      - Eval report with metric, threshold, pass / fail, and eval set hash
+      - Eval set version pinned to the model release
+      - Threshold change history (so a softened threshold is visible)
+    tooling:
+      - RAGAS for RAG evaluation
+      - DeepEval / LangSmith for behavioral eval
+      - Promptfoo for prompt and model comparison
+      - Bespoke eval harnesses against pinned datasets
+    fail_mode: |
+      A model release ships without an eval, with a moved threshold, or
+      with an eval set the team can tune against.
+
+  - id: ai-adversarial-test
+    name: Adversarial or guardrail test passed
+    lifecycle: AI-DLC
+    description: |
+      The agent or model is tested against known-bad inputs (prompt injection,
+      jailbreaks, abuse cases) and the guardrails block the bad behavior at
+      a measured rate. The result is a pass / fail with the test corpus version.
+    evidence:
+      - Adversarial test report with attack types, pass rate, and corpus hash
+      - Guardrail config (system prompt, classifier model, policy filter)
+        committed to source
+    tooling:
+      - PyRIT (Microsoft) for adversarial testing
+      - Garak for LLM red-teaming
+      - Lakera Guard / Promptfoo for prompt injection testing
+      - Bespoke red-team corpora for org-specific abuse cases
+    fail_mode: |
+      The agent goes to production with no record of adversarial testing,
+      or with guardrails that have never been measured.
+
+  - id: ai-human-signoff
+    name: Named human sign-off on behavior
+    lifecycle: AI-DLC
+    description: |
+      A named individual takes responsibility for the agent's behavior at the
+      release. The sign-off is durable and identifies the person, the
+      scope of their judgment, and the date.
+    evidence:
+      - Sign-off record with name, role, scope, date, and release version
+      - Cannot be a group inbox or a service account
+    tooling:
+      - GitHub PR approval from a designated AI release reviewer
+      - Sign-off field on the release record in the CD tool
+      - Risk register entry mapping the release to a named owner
+    fail_mode: |
+      No one is named as accountable for the agent's behavior. When the
+      agent does something wrong, there is no one to ask about the release
+      decision.
+
+  - id: ai-drift-monitor
+    name: Drift monitoring with rollback
+    lifecycle: AI-DLC
+    description: |
+      After release, the agent's behavior is monitored against the eval
+      thresholds it cleared at release time. If behavior drifts past a
+      threshold, an alert fires and a documented rollback path is available.
+    evidence:
+      - Live evaluation dashboard with release-time thresholds
+      - Alert routing to a named on-call
+      - Rollback runbook with tested procedure
+    tooling:
+      - Arize / WhyLabs / Fiddler for production monitoring
+      - LangSmith / Helicone for live evals
+      - Argo Rollouts / canary deploys with rollback triggers
+    fail_mode: |
+      The agent's behavior changes after release and nobody notices. The
+      first signal is a customer complaint or a public incident.

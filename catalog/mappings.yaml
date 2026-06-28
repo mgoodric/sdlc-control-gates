@@ -1,0 +1,459 @@
+# sdlc-control-gates: compliance mappings
+#
+# Each gate maps to specific controls in SOC 2 (TSC 2017), ISO/IEC 27001:2022
+# Annex A, PCI DSS 4.0, and HIPAA (45 CFR Part 164). Mappings name the closest
+# control and explain how the gate's evidence satisfies it.
+#
+# These mappings are a starting point, not an auditor's letter. Your auditor
+# decides what evidence satisfies which control in your context.
+
+mappings:
+
+  # ------- PDLC -------------------------------------------------------------
+
+  build-decision-recorded:
+    soc2:
+      - id: CC2.1
+        note: |
+          Internal communications of objectives and responsibilities. The
+          build decision IS the internal communication that this work is
+          authorized and someone is responsible for it.
+      - id: CC3.1
+        note: |
+          Specifies suitable objectives. The build decision names the
+          objective the work is meant to meet.
+      - id: CC8.1
+        note: |
+          Authorizes changes. The build decision is the upstream
+          authorization that downstream change-management depends on.
+    iso27001:
+      - id: A.5.8
+        note: |
+          Information security in project management. The build decision is
+          the point at which security considerations enter the project,
+          including the trigger for risk-review-attached.
+    pci-dss-4:
+      - id: "12.3"
+        note: |
+          Risks to the cardholder data environment are formally identified,
+          evaluated, and managed. A build decision touching CDE is where
+          that evaluation is recorded.
+    hipaa:
+      - id: "164.308(a)(1)(ii)(A)"
+        note: |
+          Risk analysis. The build decision is the trigger for the targeted
+          risk analysis on work that touches ePHI.
+
+  risk-review-attached:
+    soc2:
+      - id: CC3.2
+        note: |
+          Identifies and analyzes risks. The risk review IS the identification
+          and analysis recorded against the build decision.
+      - id: CC3.4
+        note: |
+          Identifies and analyzes significant changes. Risk review on a
+          significant change satisfies this directly.
+      - id: CC9.1
+        note: |
+          Identifies, selects, and develops risk mitigation activities. The
+          mitigations named in the risk review are the activities.
+    iso27001:
+      - id: A.5.8
+        note: |
+          Information security in project management. The risk review is the
+          concrete artifact this control expects on every project.
+      - id: A.8.25
+        note: |
+          Secure development life cycle. Risk review at the start of work is
+          a core SDL activity.
+      - id: A.8.27
+        note: |
+          Secure system architecture and engineering principles. The review
+          surfaces architecture-level risks before they are coded around.
+    pci-dss-4:
+      - id: "6.1.2"
+        note: |
+          Roles and responsibilities for secure development are documented.
+          Risk review is where those responsibilities concretely meet a change.
+      - id: "12.3"
+        note: |
+          Risk evaluation and management for the CDE.
+    hipaa:
+      - id: "164.308(a)(1)(ii)(A)"
+        note: |
+          Risk analysis. The review IS the risk analysis for the change.
+      - id: "164.308(a)(1)(ii)(B)"
+        note: |
+          Risk management. Mitigations named in the review feed the risk
+          management process.
+
+  post-launch-feedback:
+    soc2:
+      - id: CC4.1
+        note: |
+          Evaluates and communicates internal control performance. The
+          post-launch review is one input to that evaluation.
+      - id: CC9.1
+        note: |
+          Risk mitigation activities are reviewed for effectiveness. The
+          feedback loop is where effectiveness gets measured.
+    iso27001:
+      - id: A.5.24
+        note: |
+          Information security incident management planning. Post-launch
+          feedback is one of the inputs into incident-mode learning.
+      - id: A.8.16
+        note: |
+          Monitoring activities. Post-launch metrics are part of monitoring.
+    pci-dss-4:
+      - id: "11.5"
+        note: |
+          Detection of unexpected changes or anomalies. Post-launch feedback
+          surfaces anomalies the team can act on.
+    hipaa:
+      - id: "164.308(a)(1)(ii)(D)"
+        note: |
+          Information system activity review. Post-launch feedback is part
+          of the activity review for changes that touch ePHI.
+
+  # ------- SDLC -------------------------------------------------------------
+
+  change-reviewed:
+    soc2:
+      - id: CC8.1
+        note: |
+          Authorizes, designs, develops, configures, documents, tests,
+          approves, and implements changes. The PR review is the
+          documented approval step.
+      - id: CC2.1
+        note: |
+          Internal communications of responsibilities. The PR approval
+          record IS the internal communication that someone other than the
+          author has signed off.
+    iso27001:
+      - id: A.8.32
+        note: |
+          Change management. Peer review is the core change-management
+          control for software changes.
+      - id: A.8.28
+        note: |
+          Secure coding. The reviewer enforces coding standards on the
+          change.
+      - id: A.5.3
+        note: |
+          Segregation of duties. A non-author reviewer satisfies the
+          minimum segregation between author and approver.
+    pci-dss-4:
+      - id: "6.2.3"
+        note: |
+          Bespoke and custom software is reviewed prior to release to
+          production. PR review by a non-author satisfies this directly.
+      - id: "6.5.1"
+        note: |
+          Changes to all system components are managed. The review record
+          is the change-management evidence.
+    hipaa:
+      - id: "164.308(a)(1)(ii)(B)"
+        note: |
+          Risk management. Peer review is a primary risk-management control
+          for changes that touch ePHI.
+      - id: "164.308(a)(4)"
+        note: |
+          Information access management. Review enforces who can change what.
+
+  tests-passed:
+    soc2:
+      - id: CC8.1
+        note: |
+          Tests changes prior to implementation. Green CI is the recorded
+          test step.
+      - id: CC7.1
+        note: |
+          Detection and monitoring of vulnerabilities. Tests are one of
+          the detection mechanisms.
+    iso27001:
+      - id: A.8.29
+        note: |
+          Security testing in development and acceptance. Automated tests
+          in CI are the development-side security testing.
+      - id: A.8.32
+        note: |
+          Change management. Tested changes are a precondition for the
+          managed-change control.
+    pci-dss-4:
+      - id: "6.3.1"
+        note: |
+          Security vulnerabilities are identified and ranked. Tests are
+          one source of vulnerability identification.
+      - id: "6.5.2"
+        note: |
+          Changes are confirmed and validated. The CI run record IS the
+          validation evidence.
+      - id: "11.4"
+        note: |
+          External and internal penetration testing performed. For
+          security-relevant tests in CI, this can be partially evidenced
+          here (pen testing is broader; CI tests are not a substitute).
+    hipaa:
+      - id: "164.308(a)(8)"
+        note: |
+          Evaluation. Tests are the technical evaluation of changes to
+          systems handling ePHI.
+
+  policy-passed:
+    soc2:
+      - id: CC5.3
+        note: |
+          Deploys controls through policies and procedures. Policy-as-code
+          enforces the policy at the pipeline.
+      - id: CC7.1
+        note: |
+          Detection and monitoring of vulnerabilities. Policy scans are
+          a detection mechanism.
+      - id: CC8.1
+        note: |
+          Tests changes. The policy run is part of the test step.
+    iso27001:
+      - id: A.5.36
+        note: |
+          Compliance with policies, rules, and standards. Policy-as-code
+          enforces compliance at the gate rather than after the fact.
+      - id: A.8.29
+        note: |
+          Security testing. Policy checks are part of the security testing
+          run in CI.
+    pci-dss-4:
+      - id: "6.3.3"
+        note: |
+          System components are protected from known vulnerabilities.
+          Policy gates catch vulnerable configs and dependencies before
+          they ship.
+      - id: "6.4.1"
+        note: |
+          Public-facing web applications are protected against attacks.
+          Policy checks can enforce required protections at deploy time.
+    hipaa:
+      - id: "164.308(a)(8)"
+        note: |
+          Evaluation. Policy checks are part of the technical evaluation.
+      - id: "164.312(c)(1)"
+        note: |
+          Integrity. Policy controls protect ePHI from improper alteration
+          via misconfigured infrastructure.
+
+  deploy-authorized:
+    soc2:
+      - id: CC6.1
+        note: |
+          Logical access controls. Deploy authorization is a logical access
+          control on production.
+      - id: CC8.1
+        note: |
+          Authorizes implementation of changes. The signed deploy record
+          IS the authorization.
+    iso27001:
+      - id: A.8.32
+        note: |
+          Change management. Authorized deploy is a required step.
+      - id: A.5.3
+        note: |
+          Segregation of duties. Deploy authorization separates the
+          deployer from the author / reviewer.
+      - id: A.8.31
+        note: |
+          Separation of development, test, and production environments.
+          Authorization is the boundary between non-prod and prod.
+    pci-dss-4:
+      - id: "6.5.1"
+        note: |
+          Changes are managed.
+      - id: "6.5.4"
+        note: |
+          Roles and functions are separated between production and
+          pre-production environments. Deploy authorization is the
+          gate that enforces this.
+    hipaa:
+      - id: "164.308(a)(3)"
+        note: |
+          Workforce security. Deploy authorization controls who can
+          push changes that affect ePHI systems.
+      - id: "164.312(a)(1)"
+        note: |
+          Access control. Authorization gates access to production.
+
+  deploy-logged:
+    soc2:
+      - id: CC7.1
+        note: |
+          Detection. The deploy log is one of the inputs to detection.
+      - id: CC7.2
+        note: |
+          Monitoring of system components for anomalies. The log enables
+          monitoring.
+    iso27001:
+      - id: A.8.15
+        note: |
+          Logging. The deploy log is the direct evidence for this control.
+      - id: A.8.16
+        note: |
+          Monitoring activities. Logs feed monitoring.
+    pci-dss-4:
+      - id: "10.2"
+        note: |
+          Audit logs are implemented to support detection and forensic
+          analysis. Deploy logs are part of the audit log set.
+      - id: "10.3"
+        note: |
+          Audit logs are protected from destruction and unauthorized
+          modifications. An append-only deploy log satisfies this.
+    hipaa:
+      - id: "164.312(b)"
+        note: |
+          Audit controls. Deploy logs are direct evidence for this
+          implementation specification.
+      - id: "164.308(a)(1)(ii)(D)"
+        note: |
+          Information system activity review. The log is what gets reviewed.
+
+  # ------- AI-DLC -----------------------------------------------------------
+  # AI-DLC gates do not have direct one-to-one framework controls. The
+  # mappings below are BEST-FIT (closest existing control) with explanatory
+  # notes. As ISO/IEC 42001 (AI management systems) and the NIST AI RMF gain
+  # audit traction, those will be added as separate framework files. See
+  # docs/ai-dlc-extension.md.
+
+  ai-eval-cleared:
+    soc2:
+      - id: CC8.1
+        note: |
+          BEST-FIT. Tests changes prior to implementation. The eval is a
+          test extended to behavior; the fit is approximate because SOC 2
+          assumes deterministic test outcomes.
+      - id: CC3.2
+        note: |
+          BEST-FIT. Identifies and analyzes risks. The eval threshold is
+          the team's recorded risk acceptance for behavior quality.
+    iso27001:
+      - id: A.8.29
+        note: |
+          BEST-FIT. Security testing in development and acceptance.
+          Eval-against-threshold is the AI-DLC analog of CI tests.
+      - id: A.8.33
+        note: |
+          BEST-FIT. Test information. The held-out eval set must be
+          protected from contamination (training leakage), same control
+          shape as test-data protection.
+    pci-dss-4:
+      - id: "6.3.1"
+        note: |
+          BEST-FIT, weak. PCI does not address AI evals. Closest framing:
+          security vulnerabilities are identified and ranked, where a
+          failed eval IS an identified quality risk.
+    hipaa:
+      - id: "164.308(a)(8)"
+        note: |
+          BEST-FIT. Evaluation. Eval-against-threshold is the technical
+          evaluation for AI systems that touch ePHI.
+
+  ai-adversarial-test:
+    soc2:
+      - id: CC7.1
+        note: |
+          BEST-FIT. Detection and monitoring of vulnerabilities. Adversarial
+          testing is the vulnerability discovery activity for AI systems.
+      - id: CC8.1
+        note: |
+          BEST-FIT. Tests changes. Adversarial testing is a category of test.
+    iso27001:
+      - id: A.8.29
+        note: |
+          BEST-FIT. Security testing. Adversarial / red-team testing is a
+          security testing technique.
+      - id: A.5.7
+        note: |
+          BEST-FIT. Threat intelligence. The adversarial corpus is derived
+          from threat intelligence about AI attack patterns.
+    pci-dss-4:
+      - id: "11.4"
+        note: |
+          BEST-FIT, partial. Penetration testing. AI red-teaming is the
+          AI-system analog of penetration testing.
+    hipaa:
+      - id: "164.308(a)(8)"
+        note: |
+          BEST-FIT. Evaluation. Adversarial testing is part of the
+          technical evaluation of AI systems handling ePHI.
+
+  ai-human-signoff:
+    soc2:
+      - id: CC1.5
+        note: |
+          Holds individuals accountable. The named sign-off IS the
+          accountability mechanism.
+      - id: CC2.1
+        note: |
+          Internal communications of responsibilities. The sign-off
+          communicates who is accountable.
+    iso27001:
+      - id: A.5.3
+        note: |
+          Segregation of duties. The sign-off names the responsible
+          individual separate from the developer.
+      - id: A.5.4
+        note: |
+          Management responsibilities. The sign-off is a recorded
+          management acceptance of the release.
+    pci-dss-4:
+      - id: "12.4"
+        note: |
+          BEST-FIT. Roles and responsibilities for protecting the CDE are
+          documented and assigned. The sign-off names the responsible
+          individual for the release.
+      - id: "6.5.1"
+        note: |
+          Changes are managed. Named sign-off is part of the management
+          chain.
+    hipaa:
+      - id: "164.308(a)(2)"
+        note: |
+          Assigned security responsibility. The named sign-off is the
+          assignment for that release.
+
+  ai-drift-monitor:
+    soc2:
+      - id: CC7.1
+        note: |
+          BEST-FIT. Detection. Drift monitoring is the AI-specific
+          detection mechanism.
+      - id: CC7.2
+        note: |
+          BEST-FIT. Monitoring of system components for anomalies. Drift
+          IS the anomaly category for AI systems.
+      - id: CC7.3
+        note: |
+          BEST-FIT. Response to incidents. The rollback path is the
+          response mechanism.
+    iso27001:
+      - id: A.8.16
+        note: |
+          Monitoring activities. Drift monitoring is the AI-specific
+          monitoring activity.
+      - id: A.5.24
+        note: |
+          BEST-FIT. Incident management planning. Drift alerts feed
+          incident response.
+    pci-dss-4:
+      - id: "11.5"
+        note: |
+          BEST-FIT. Detection of unexpected changes. Drift in AI behavior
+          is an unexpected change in system behavior.
+    hipaa:
+      - id: "164.308(a)(1)(ii)(D)"
+        note: |
+          Information system activity review. Drift monitoring is the
+          ongoing review for AI systems handling ePHI.
+      - id: "164.308(a)(6)"
+        note: |
+          Security incident procedures. Drift-triggered rollback is part
+          of incident handling.
