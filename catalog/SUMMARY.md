@@ -16,6 +16,10 @@ For each gate's full description, evidence shapes, tooling examples, and failure
 | SDLC | `policy-passed` | Policy gate pass / fail (Conftest, Trivy, etc.) | CC5.3, CC7.1, CC8.1 | A.5.36, A.8.29 | 6.3.3, 6.4.1 | §164.308(a)(8), §164.312(c)(1) | [Conftest](../examples/conftest/), [GitHub Actions](../examples/github-actions/) |
 | SDLC | `deploy-authorized` | Signed deploy with provenance attestation | CC6.1, CC8.1 | A.8.32, A.5.3, A.8.31 | 6.5.1, 6.5.4 | §164.308(a)(3), §164.312(a)(1) | [GitHub Actions](../examples/github-actions/), [OSCAL](../examples/oscal/) |
 | SDLC | `deploy-logged` | Append-only deploy log (commit, image, time, deployer) | CC7.1, CC7.2 | A.8.15, A.8.16 | 10.2, 10.3 | §164.312(b), §164.308(a)(1)(ii)(D) | [GitHub Actions](../examples/github-actions/) |
+| SDLC | `author-training-current` | Author has current security training (LMS record) | CC1.4, CC2.2 | A.6.3, A.5.36 | 6.2.2, 12.6 | §164.308(a)(5) | [PR template](../examples/pr-templates/) |
+| SDLC | `source-access-restricted` | Repo access list audited periodically | CC6.1, CC6.3 | A.8.4, A.8.2, A.5.18 | 7.2.1, 7.2.4, 7.3.1 | §164.308(a)(4), §164.312(a)(1) | — |
+| SDLC | `test-data-clean` | No production data in pre-prod; test accounts removed at release | CC6.7, CC8.1 | A.8.33, A.8.31 | 6.5.5, 6.5.6 | §164.308(a)(4), §164.312(c)(1) | [PR template](../examples/pr-templates/) |
+| SDLC | `dependency-provenance` | SBOM attached, dependencies pinned and verified | CC7.1, CC8.1 | A.5.21, A.8.30, A.8.28 | 6.3.2, 6.3.3 | §164.308(a)(8), §164.308(a)(1)(ii)(D) | [GitHub Actions](../examples/github-actions/) |
 | AI-DLC | `ai-eval-cleared` | Eval report with pinned threshold and eval-set hash | CC8.1\*, CC3.2\* | A.8.29\*, A.8.33\* | 6.3.1\* | §164.308(a)(8)\* | [PR template](../examples/pr-templates/) |
 | AI-DLC | `ai-adversarial-test` | Adversarial test report with attack types and pass rate | CC7.1\*, CC8.1\* | A.8.29\*, A.5.7\* | 11.4\* | §164.308(a)(8)\* | [PR template](../examples/pr-templates/) |
 | AI-DLC | `ai-human-signoff` | Named individual sign-off with role, scope, date | CC1.5, CC2.1 | A.5.3, A.5.4 | 12.4\*, 6.5.1 | §164.308(a)(2) | [PR template](../examples/pr-templates/) |
@@ -30,7 +34,7 @@ For each gate's full description, evidence shapes, tooling examples, and failure
 
 ## Quick lookups
 
-- "Which gates do I need for **SOC 2**?" → All twelve, by typical SOC 2 scope. Start with the SDLC five.
-- "Which gates do I need for **PCI DSS 4.0**?" → All SDLC gates plus `risk-review-attached`. AI-DLC gates only if you process card data through an AI agent.
-- "Which gates do I need for **HIPAA**?" → All SDLC gates plus `risk-review-attached` and `post-launch-feedback`. AI-DLC gates only if AI touches ePHI.
-- "Which gates do I need for **ISO 27001**?" → All twelve, with `policy-passed` and `change-reviewed` carrying most of the change-management evidence.
+- "Which gates do I need for **SOC 2**?" → All sixteen, by typical SOC 2 scope. The SDLC nine are non-optional; `author-training-current` is the one teams most often miss.
+- "Which gates do I need for **PCI DSS 4.0**?" → All SDLC gates plus `risk-review-attached`. `author-training-current`, `test-data-clean`, and `dependency-provenance` map to specific PCI 4.0 requirements (6.2.2, 6.5.5/6, 6.3.2/3) that PCI 4.0 added or sharpened relative to 3.2.1. AI-DLC gates only if card data flows through an AI agent.
+- "Which gates do I need for **HIPAA**?" → All SDLC gates plus `risk-review-attached` and `post-launch-feedback`. `author-training-current` carries §164.308(a)(5), which OCR investigations frequently cite. AI-DLC gates only if AI touches ePHI.
+- "Which gates do I need for **ISO 27001**?" → All sixteen. `source-access-restricted` maps directly to A.8.4 (one of the new 2022 controls); `dependency-provenance` maps to A.5.21 supply-chain control; `policy-passed` and `change-reviewed` still carry most of the change-management evidence.

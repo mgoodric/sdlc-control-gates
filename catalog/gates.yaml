@@ -5,7 +5,7 @@
 # team hits the same gates and produces the same evidence shape. How they
 # move between gates is theirs.
 #
-# Twelve gates: three PDLC, five SDLC, four AI-DLC.
+# Sixteen gates: three PDLC, nine SDLC, four AI-DLC.
 
 gates:
 
@@ -169,6 +169,93 @@ gates:
     fail_mode: |
       Releases happen with no durable record of what shipped. Incident
       response cannot answer "what changed before this broke?"
+
+  - id: author-training-current
+    name: Author has current security training
+    lifecycle: SDLC
+    description: |
+      The author of a change has completed security awareness or secure
+      development training within the policy window (typically the past
+      12 months). The training record is linked to the author's identity
+      and visible to the reviewer at PR time.
+    evidence:
+      - Training completion record linked to author identity with date
+      - Required check on PR that blocks merge when training has lapsed
+      - Annual training roster with named completers
+    tooling:
+      - Workday Learning / LMS API queried at PR time
+      - KnowBe4 / Hoxhunt / SANS / Cybrary records
+      - Custom GitHub Action that queries LMS before merge
+      - Spreadsheet of attestations (last-resort starting point)
+    fail_mode: |
+      A change merges from an author whose security training has lapsed
+      or never happened. The auditor sees code authored by someone the
+      org cannot show was trained.
+
+  - id: source-access-restricted
+    name: Source code access restricted and audited
+    lifecycle: SDLC
+    description: |
+      Read and write access to source code repositories is limited to
+      identities that need it, periodically reviewed, and audit-logged.
+      The gate is evidenced at periodic intervals (not per-change), but
+      it is named alongside the per-change gates because it is part of
+      the SDLC control surface.
+    evidence:
+      - Repository access list with role and approval reference
+      - Periodic access review record (typically quarterly)
+      - Audit log of access grants, revocations, and use
+    tooling:
+      - GitHub Enterprise audit log + organization access settings
+      - GitLab access tokens and audit events
+      - Gerrit groups and audit
+      - Access review tooling (Veza, C1, ConductorOne) reading repo state
+    fail_mode: |
+      Stale developer accounts retain repo access after they no longer
+      need it. The auditor cannot establish the principle of least
+      privilege for source code.
+
+  - id: test-data-clean
+    name: Test data is clean of production information
+    lifecycle: SDLC
+    description: |
+      Pre-production environments do not contain real production data
+      (card numbers, ePHI, personal identifiers, customer-supplied
+      secrets). Test accounts created during development are removed
+      before the change ships to production.
+    evidence:
+      - Scan record showing no production data patterns in pre-prod DBs
+      - Synthetic-data generation config committed to source
+      - Pre-release checklist confirming test accounts removed
+    tooling:
+      - Faker / Synthea / Tonic.ai / Delphix for synthetic data
+      - DB scanners that flag PAN, SSN, or ePHI markers in non-prod
+      - Pre-release CI job that fails if test accounts remain
+    fail_mode: |
+      Real customer data sits in a dev environment with weaker access
+      controls. A breach in dev becomes a breach in prod.
+
+  - id: dependency-provenance
+    name: Dependency provenance recorded
+    lifecycle: SDLC
+    description: |
+      Every release ships with an SBOM listing direct and transitive
+      dependencies, dependencies are pinned to verified versions, and
+      signature verification runs against suppliers that publish signed
+      artifacts. The SBOM is queryable after the fact.
+    evidence:
+      - SBOM artifact (SPDX or CycloneDX) attached to the release
+      - Lock file showing pinned versions
+      - Signature verification record for signed dependencies
+    tooling:
+      - Syft / Trivy / Grype for SBOM generation
+      - Sigstore Cosign for verification of signed artifacts
+      - npm audit / pip-audit / cargo audit for known-vuln detection
+      - Dependabot / Renovate for pinning and update PRs
+      - Dependency-Track for ongoing vulnerability tracking against SBOMs
+    fail_mode: |
+      A vulnerable or compromised dependency ships to production and the
+      org cannot quickly answer "which of our releases are affected?"
 
   # ------- AI-DLC -----------------------------------------------------------
   # AI-DLC inherits all SDLC gates. The four gates below are the genuinely

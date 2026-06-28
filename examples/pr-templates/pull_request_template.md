@@ -37,6 +37,9 @@ Review: <!-- security-review-123 / dpia-45 / n/a -->
 
 - [ ] CI run is green (`tests-passed`)
 - [ ] Policy / security scans are green (`policy-passed`)
+- [ ] Author has current security training within the policy window (`author-training-current`)
+- [ ] SBOM is attached and dependencies are pinned (`dependency-provenance`)
+- [ ] If pre-prod data was needed, it is synthetic or scrubbed and test accounts are removed (`test-data-clean`)
 - [ ] For AI changes: eval ran against the held-out set and cleared threshold (`ai-eval-cleared`)
 - [ ] For AI changes: adversarial / guardrail test passed (`ai-adversarial-test`)
 - [ ] For AI changes: I, named here, take responsibility for behavior (`ai-human-signoff`)

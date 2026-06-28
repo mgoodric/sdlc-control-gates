@@ -12,15 +12,16 @@ HIPAA distinguishes "required" implementation specifications (must implement) fr
 |---|---|---|
 | **§164.308(a)(1)(ii)(A)** | Risk analysis (required) | `build-decision-recorded`, `risk-review-attached` |
 | **§164.308(a)(1)(ii)(B)** | Risk management (required) | `risk-review-attached`, `change-reviewed` |
-| **§164.308(a)(1)(ii)(D)** | Information system activity review (required) | `deploy-logged`, `post-launch-feedback`, `ai-drift-monitor` |
+| **§164.308(a)(1)(ii)(D)** | Information system activity review (required) | `deploy-logged`, `post-launch-feedback`, `dependency-provenance`, `ai-drift-monitor` |
 | **§164.308(a)(2)** | Assigned security responsibility (required) | `ai-human-signoff` |
 | **§164.308(a)(3)** | Workforce security (required) | `deploy-authorized` |
-| **§164.308(a)(4)** | Information access management (required) | `change-reviewed` |
+| **§164.308(a)(4)** | Information access management (required) | `change-reviewed`, `source-access-restricted`, `test-data-clean` |
+| **§164.308(a)(5)** | Security awareness and training (required) | `author-training-current` |
 | **§164.308(a)(6)** | Security incident procedures (required) | `ai-drift-monitor` |
-| **§164.308(a)(8)** | Evaluation (required) | `tests-passed`, `policy-passed`, `ai-eval-cleared`, `ai-adversarial-test` |
-| **§164.312(a)(1)** | Access control (required) | `deploy-authorized` |
+| **§164.308(a)(8)** | Evaluation (required) | `tests-passed`, `policy-passed`, `dependency-provenance`, `ai-eval-cleared`, `ai-adversarial-test` |
+| **§164.312(a)(1)** | Access control (required) | `deploy-authorized`, `source-access-restricted` |
 | **§164.312(b)** | Audit controls (required) | `deploy-logged` |
-| **§164.312(c)(1)** | Integrity (required) | `policy-passed` |
+| **§164.312(c)(1)** | Integrity (required) | `policy-passed`, `test-data-clean` |
 
 ## How an auditor (OCR or external assessor) uses this
 

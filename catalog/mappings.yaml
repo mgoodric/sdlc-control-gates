@@ -316,6 +316,177 @@ mappings:
         note: |
           Information system activity review. The log is what gets reviewed.
 
+  author-training-current:
+    soc2:
+      - id: CC1.4
+        note: |
+          Demonstrates commitment to attracting, developing, and retaining
+          a competent workforce. The training record IS the evidence of
+          competence for the people writing the code.
+      - id: CC2.2
+        note: |
+          Internally communicates information necessary to support the
+          functioning of internal control. Security training is one of
+          those communication channels.
+    iso27001:
+      - id: A.6.3
+        note: |
+          Information security awareness, education, and training. Direct
+          fit. The training record is the controls's expected artifact.
+      - id: A.5.36
+        note: |
+          Compliance with policies, rules, and standards. When training is
+          a named policy requirement, the record proves compliance.
+    pci-dss-4:
+      - id: "6.2.2"
+        note: |
+          Software development personnel working on bespoke and custom
+          software are trained at least once every 12 months on
+          software security relevant to their job function and
+          development languages. Direct fit.
+      - id: "12.6"
+        note: |
+          Security awareness education is an ongoing program. The
+          developer training record is part of the broader program.
+    hipaa:
+      - id: "164.308(a)(5)"
+        note: |
+          Security awareness and training. Direct fit. The training record
+          is the expected artifact, including periodic security updates,
+          protection from malicious software, log-in monitoring, and
+          password management awareness.
+
+  source-access-restricted:
+    soc2:
+      - id: CC6.1
+        note: |
+          Logical access controls. Source code is a logical asset; the
+          repository's access list IS the logical access control.
+      - id: CC6.3
+        note: |
+          Authorizes, modifies, and removes access based on roles and
+          responsibilities. The periodic access review is the expected
+          evidence.
+    iso27001:
+      - id: A.8.4
+        note: |
+          Access to source code. DIRECT FIT. This Annex A control was
+          written specifically for the gate this catalog calls
+          source-access-restricted.
+      - id: A.8.2
+        note: |
+          Privileged access rights. When source-code access enables
+          privileged actions (admin tools, secrets), this control applies.
+      - id: A.5.18
+        note: |
+          Access rights. The provisioning, review, and removal of access
+          rights to repositories.
+    pci-dss-4:
+      - id: "7.2.1"
+        note: |
+          Access control model defines access needs and privileges. The
+          repo access list maps to this for source code.
+      - id: "7.2.4"
+        note: |
+          User accounts and related access privileges are reviewed at
+          least once every six months. The periodic access review is
+          the direct evidence.
+      - id: "7.3.1"
+        note: |
+          Access to system components and data is managed via an access
+          control system that restricts access based on need-to-know.
+    hipaa:
+      - id: "164.308(a)(4)"
+        note: |
+          Information access management. The repo access list and review
+          are the expected administrative-safeguard artifacts.
+      - id: "164.312(a)(1)"
+        note: |
+          Access control. The technical safeguard for limiting access to
+          ePHI extends to systems housing ePHI-related code and config.
+
+  test-data-clean:
+    soc2:
+      - id: CC6.7
+        note: |
+          Restricts the movement of information to authorized internal
+          and external users. Test-data hygiene prevents production
+          information from moving into less-controlled environments.
+      - id: CC8.1
+        note: |
+          Tests changes prior to implementation. Test data discipline
+          is part of how testing is done correctly.
+    iso27001:
+      - id: A.8.33
+        note: |
+          Test information. DIRECT FIT. Selection, protection, and
+          control of test information is exactly this gate.
+      - id: A.8.31
+        note: |
+          Separation of development, test, and production environments.
+          Test-data hygiene is part of how that separation is enforced.
+    pci-dss-4:
+      - id: "6.5.5"
+        note: |
+          Live PANs are not used in pre-production environments. DIRECT FIT.
+      - id: "6.5.6"
+        note: |
+          Test data and test accounts are removed from system components
+          before the system goes into production. DIRECT FIT.
+    hipaa:
+      - id: "164.308(a)(4)"
+        note: |
+          Information access management. Limiting where ePHI is permitted
+          to live extends to test environments.
+      - id: "164.312(c)(1)"
+        note: |
+          Integrity. ePHI in test environments is at risk of improper
+          alteration; the gate keeps it out.
+
+  dependency-provenance:
+    soc2:
+      - id: CC7.1
+        note: |
+          Detection of vulnerabilities. The SBOM enables ongoing
+          detection of newly-disclosed vulnerabilities in shipped
+          dependencies.
+      - id: CC8.1
+        note: |
+          Tests changes prior to implementation. Dependency scanning
+          and provenance verification are part of the test step.
+    iso27001:
+      - id: A.5.21
+        note: |
+          Managing information security in the ICT supply chain.
+          The SBOM IS the supply-chain inventory the control expects.
+      - id: A.8.30
+        note: |
+          Outsourced development. Dependencies are effectively outsourced
+          code; provenance is how that outsourcing is governed.
+      - id: A.8.28
+        note: |
+          Secure coding. Pinning to verified versions is a secure-coding
+          practice.
+    pci-dss-4:
+      - id: "6.3.2"
+        note: |
+          Inventory of bespoke and custom software, and third-party
+          software components, is maintained. The SBOM is the inventory.
+      - id: "6.3.3"
+        note: |
+          System components are protected from known vulnerabilities.
+          The SBOM enables identification; dependency-update flow
+          satisfies remediation.
+    hipaa:
+      - id: "164.308(a)(8)"
+        note: |
+          Evaluation. SBOM-driven vulnerability scanning is the technical
+          evaluation of dependencies in ePHI-handling systems.
+      - id: "164.308(a)(1)(ii)(D)"
+        note: |
+          Information system activity review. The SBOM informs the
+          periodic review of what is running and what it depends on.
+
   # ------- AI-DLC -----------------------------------------------------------
   # AI-DLC gates do not have direct one-to-one framework controls. The
   # mappings below are BEST-FIT (closest existing control) with explanatory

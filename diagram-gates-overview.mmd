@@ -6,7 +6,7 @@ flowchart TB
   end
   subgraph SDLC["SDLC (software)"]
     direction LR
-    S1["Change<br/>reviewed"] ~~~ S2["Tests<br/>passed"] ~~~ S3["Policy<br/>passed"] ~~~ S4["Deploy<br/>authorized"] ~~~ S5["Deploy<br/>logged"]
+    S1["Change<br/>reviewed"] ~~~ S2["Tests<br/>passed"] ~~~ S3["Policy<br/>passed"] ~~~ S4["Deploy<br/>authorized"] ~~~ S5["Deploy<br/>logged"] ~~~ S6["Author training<br/>current"] ~~~ S7["Source access<br/>restricted"] ~~~ S8["Test data<br/>clean"] ~~~ S9["Dependency<br/>provenance"]
   end
   subgraph AIB["AI-DLC (adds these when AI is in scope)"]
     direction LR

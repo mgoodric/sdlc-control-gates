@@ -9,19 +9,27 @@ PCI DSS 4.0 was published in March 2022 with most controls effective March 2025.
 | Req | Requirement | Gates that produce evidence |
 |---|---|---|
 | **6.1.2** | Roles and responsibilities for secure development are documented | `risk-review-attached` |
+| **6.2.2** | Software development personnel are trained at least every 12 months | `author-training-current` |
 | **6.2.3** | Bespoke and custom software is reviewed prior to release | `change-reviewed` |
 | **6.3.1** | Security vulnerabilities are identified and ranked | `tests-passed`, `ai-eval-cleared` (best-fit) |
-| **6.3.3** | System components are protected from known vulnerabilities | `policy-passed` |
+| **6.3.2** | Inventory of bespoke, custom, and third-party software components | `dependency-provenance` |
+| **6.3.3** | System components are protected from known vulnerabilities | `policy-passed`, `dependency-provenance` |
 | **6.4.1** | Public-facing web applications are protected against attacks | `policy-passed` |
 | **6.5.1** | Changes to all system components are managed | `change-reviewed`, `deploy-authorized`, `ai-human-signoff` |
 | **6.5.2** | Changes are confirmed and validated against PCI requirements | `tests-passed` |
 | **6.5.4** | Roles and functions are separated between production and pre-production | `deploy-authorized` |
+| **6.5.5** | Live PANs are not used in pre-production environments | `test-data-clean` |
+| **6.5.6** | Test data and test accounts removed before going live | `test-data-clean` |
+| **7.2.1** | Access control model defines access needs and privileges | `source-access-restricted` |
+| **7.2.4** | User accounts and access privileges reviewed at least every six months | `source-access-restricted` |
+| **7.3.1** | Access managed via access control system based on need-to-know | `source-access-restricted` |
 | **10.2** | Audit logs are implemented to support detection and forensics | `deploy-logged` |
 | **10.3** | Audit logs are protected from destruction and unauthorized modification | `deploy-logged` (when append-only) |
 | **11.4** | External and internal penetration testing performed | `ai-adversarial-test` (partial) |
 | **11.5** | Detection of unexpected changes or anomalies | `post-launch-feedback`, `ai-drift-monitor` (best-fit) |
 | **12.3** | Risks to the CDE are formally identified, evaluated, managed | `build-decision-recorded`, `risk-review-attached` |
 | **12.4** | Roles and responsibilities for protecting the CDE are documented | `ai-human-signoff` (best-fit) |
+| **12.6** | Security awareness education is an ongoing program | `author-training-current` |
 
 ## How a QSA uses this
 

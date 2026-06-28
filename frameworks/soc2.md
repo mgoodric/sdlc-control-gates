@@ -8,18 +8,22 @@ SOC 2 is principle-based: the AICPA Trust Services Criteria name what the audito
 
 | TSC | Control | Gates that produce evidence |
 |---|---|---|
+| **CC1.4** | Demonstrates commitment to a competent workforce | `author-training-current` |
 | **CC1.5** | Holds individuals accountable | `ai-human-signoff` |
 | **CC2.1** | Internal communications of objectives, responsibilities | `build-decision-recorded`, `change-reviewed`, `ai-human-signoff` |
+| **CC2.2** | Internal communications supporting internal control | `author-training-current` |
 | **CC3.1** | Specifies suitable objectives | `build-decision-recorded` |
 | **CC3.2** | Identifies and analyzes risks | `risk-review-attached`, `ai-eval-cleared` (best-fit) |
 | **CC3.4** | Identifies and analyzes significant changes | `risk-review-attached` |
 | **CC4.1** | Evaluates internal control performance | `post-launch-feedback` |
 | **CC5.3** | Deploys controls through policies | `policy-passed` |
-| **CC6.1** | Logical access controls | `deploy-authorized` |
-| **CC7.1** | Detection and monitoring of vulnerabilities | `tests-passed`, `policy-passed`, `deploy-logged`, `ai-adversarial-test` (best-fit), `ai-drift-monitor` (best-fit) |
+| **CC6.1** | Logical access controls | `deploy-authorized`, `source-access-restricted` |
+| **CC6.3** | Authorizes, modifies, removes access | `source-access-restricted` |
+| **CC6.7** | Restricts movement of information | `test-data-clean` |
+| **CC7.1** | Detection and monitoring of vulnerabilities | `tests-passed`, `policy-passed`, `deploy-logged`, `dependency-provenance`, `ai-adversarial-test` (best-fit), `ai-drift-monitor` (best-fit) |
 | **CC7.2** | Monitoring for anomalies | `deploy-logged`, `ai-drift-monitor` (best-fit) |
 | **CC7.3** | Response to incidents | `ai-drift-monitor` (best-fit) |
-| **CC8.1** | Authorizes, designs, develops, configures, documents, tests, approves, implements changes | `build-decision-recorded`, `change-reviewed`, `tests-passed`, `policy-passed`, `deploy-authorized`, `ai-eval-cleared` (best-fit), `ai-adversarial-test` (best-fit) |
+| **CC8.1** | Authorizes, designs, develops, configures, documents, tests, approves, implements changes | `build-decision-recorded`, `change-reviewed`, `tests-passed`, `policy-passed`, `deploy-authorized`, `test-data-clean`, `dependency-provenance`, `ai-eval-cleared` (best-fit), `ai-adversarial-test` (best-fit) |
 | **CC9.1** | Identifies, selects, develops risk mitigation | `risk-review-attached`, `post-launch-feedback` |
 
 ## How an auditor uses this
