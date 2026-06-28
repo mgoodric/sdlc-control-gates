@@ -4,8 +4,11 @@ A take-and-modify catalog of SDLC control gates, the evidence each gate emits, a
 
 This is the working artifact behind the post [Standardize the Gates, Not the Steps](https://mattgoodrich.com/posts/standardize-the-gates-not-the-steps/). The premise: an auditable software process and a true software process are usually different documents because companies write down their steps when they should be writing down their gates. Gates are control points where evidence gets collected. Steps are how teams get between gates. Standardize the gates. Leave the steps alone.
 
+![The Twelve Gates Across Three Lifecycles: Three PDLC Gates (Build Decision Recorded, Risk Review Attached, Post-Launch Feedback), Five SDLC Gates (Change Reviewed, Tests Passed, Policy Passed, Deploy Authorized, Deploy Logged), and Four AI-DLC Gates (AI Eval Cleared, AI Adversarial Test, AI Human Sign-Off, AI Drift Monitor) Drawn as an Extension of the SDLC When AI Is in Scope](diagram-gates-overview.png)
+
 ## What's in here
 
+- **[`catalog/SUMMARY.md`](catalog/SUMMARY.md)** — a single mega-table tying every gate to its evidence shape, framework controls in all four frameworks, and example file. Start here if you want to scan and decide.
 - **`catalog/gates.yaml`** — the gates themselves, with the evidence each one emits, the tooling that typically produces that evidence, and the failure mode if the gate is missing. Twelve gates: three PDLC, five SDLC, four AI-DLC.
 - **`catalog/mappings.yaml`** — each gate mapped to specific controls in SOC 2, ISO 27001, PCI DSS 4.0, and HIPAA, with notes on how the mapping works.
 - **`frameworks/`** — one markdown per framework showing the controls referenced and what evidence satisfies each, written so an auditor and an engineer can both use it.
